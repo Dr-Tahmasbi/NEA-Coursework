@@ -1,6 +1,8 @@
 import pygame
 import chess
 import chess.engine
+import asyncio
+
 
 pygame.init()
 
@@ -76,6 +78,17 @@ while running:
 
         ###################################gamew play here##########################################################
         gameDisplay.fill(BLACK)
+        async def main() -> None:
+            transport, engine = await chess.engine.popen_uci(r"C:\Users\sy252556\OneDrive - Xaverian College\David Law's files - TAHMASBI, Aidan\NEA Program\stockfish\stockfish-windows-x86-64-avx2.exe")
+
+            board = chess.Board()
+            while not board.is_game_over():
+                result = await engine.play(board, chess.engine.Limit(time=0.1))
+                board.push(result.move)
+
+            await engine.quit()
+
+        asyncio.run(main())
         if button("PAUSE",20,20,120,50,RED,WHITE,BLACK) and clicked: current_state=PAUSE
         if button("END",620,20,150,50,RED,WHITE,BLACK) and clicked: current_state=SCOREBOARD
 
